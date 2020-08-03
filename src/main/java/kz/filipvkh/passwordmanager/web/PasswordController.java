@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PasswordController {
@@ -17,19 +17,14 @@ public class PasswordController {
     @Autowired
     private PasswordService passwordService;
 
+    @GetMapping("/password")
+    public ResponseEntity<String> getPasswords(@RequestParam String tag) {
+        return new ResponseEntity<>(passwordService.resolveTag(tag), HttpStatus.OK);
+    }
+
     @PostMapping("/password")
-    public ResponseEntity<String> getEncryptedPassword(@RequestBody String tag) {
-        List<Password> passwords = passwordService.resolveTag(tag);
-        if (passwords.isEmpty()) {
-            return new ResponseEntity<>("no password found", HttpStatus.OK);
-        } else if (passwords.size() == 1) {
-            return new ResponseEntity<>(passwords.get(0).getValue(), HttpStatus.OK);
-        } else {
-            StringBuilder response = new StringBuilder();
-            for (Password p : passwords) {
-                response.append(p.getResource()).append(" ").append(p.getValue()).append("\n");
-            }
-            return new ResponseEntity<>(response.toString(), HttpStatus.OK);
-        }
+    public ResponseEntity<String> saveNewPassword(@RequestBody Password password) {
+        passwordService.save(password);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
