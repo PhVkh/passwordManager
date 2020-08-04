@@ -13,20 +13,8 @@ public class PasswordService {
     @Autowired
     private PasswordRepository passwordRepository;
 
-    public String resolveTag(String tag) {
-        List<Password> passwords = passwordRepository.findAllByTags(tag);
-
-        if (passwords.isEmpty()) {
-            return "no password found";
-        } else if (passwords.size() == 1) {
-            return passwords.get(0).getValue();
-        } else {
-            StringBuilder response = new StringBuilder();
-            for (Password p : passwords) {
-                response.append(p.getResource()).append(" ").append(p.getValue()).append("\n");
-            }
-            return response.toString();
-        }
+    public List<Password> resolveTag(String tag) {
+        return passwordRepository.findAllByTags(tag);
     }
 
     public void save(Password password) {

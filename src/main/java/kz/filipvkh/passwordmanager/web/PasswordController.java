@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 public class PasswordController {
 
@@ -18,7 +20,7 @@ public class PasswordController {
     private PasswordService passwordService;
 
     @GetMapping("/password")
-    public ResponseEntity<String> getPasswords(@RequestParam String tag) {
+    public ResponseEntity<List<Password>> getPasswords(@RequestParam String tag) {
         return new ResponseEntity<>(passwordService.resolveTag(tag), HttpStatus.OK);
     }
 
